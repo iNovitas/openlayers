@@ -22,7 +22,7 @@ goog.require('ol.xml');
  * @extends {ol.format.GML2}
  * @api
  */
-ol.format.GMLLids = function (opt_options) {
+ol.format.GMLLids = function(opt_options) {
   var options = /** @type {olx.format.GMLOptions} */
     (opt_options ? opt_options : {});
 
@@ -40,7 +40,7 @@ ol.inherits(ol.format.GMLLids, ol.format.GML2);
  * @override
  * @return {ol.Feature} Feature.
  */
-ol.format.GMLLids.prototype.readFeatureElement = function (node, objectStack) {
+ol.format.GMLLids.prototype.readFeatureElement = function(node, objectStack) {
   // var feature = Object.getPrototypeOf(ol.format.GMLB.prototype).readFeatureElement.call(this,node,objectStack);
   //
   // var fid = node.getAttribute('id');
@@ -75,8 +75,7 @@ ol.format.GMLLids.prototype.readFeatureElement = function (node, objectStack) {
         //   value = undefined;
         // }
         values[localName] = value;
-      }
-      else if (attributedesc.dataType.type == "CODELIST") {
+      } else if (attributedesc.dataType.type == 'CODELIST') {
         var nn;
         for (nn = n.firstElementChild; nn; nn = nn.nextElementSibling) {
           var localcodelistName = nn.localName;
@@ -92,7 +91,7 @@ ol.format.GMLLids.prototype.readFeatureElement = function (node, objectStack) {
       }
     }
 
-    if (localName == "at_geom") {
+    if (localName == 'at_geom') {
       geometryName = localName;
       values[localName] = this.readGeometryElement(n, objectStack);
     }
