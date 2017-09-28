@@ -572,8 +572,13 @@ ol.format.GML3.prototype.writePos_ = function(node, value, objectStack) {
   }
   var point = value.getCoordinates();
   var coords;
-  // only 2d for simple features profile
-  if (axisOrientation.substr(0, 2) === 'en') {
+  if (point.length>2) {
+    if (axisOrientation.substr(0, 3) === 'enu') {
+      coords = (point[0] + ' ' + point[1] + ' ' + point[2]);
+    } else {
+      coords = (point[1] + ' ' + point[0] + ' ' + point[0]);
+    }
+  } else if (axisOrientation.substr(0, 2) === 'en') {   // only 2d for simple features profile
     coords = (point[0] + ' ' + point[1]);
   } else {
     coords = (point[1] + ' ' + point[0]);
@@ -598,6 +603,22 @@ ol.format.GML3.prototype.getCoords_ = function(point, opt_srsName) {
       point[1] + ' ' + point[0]);
 };
 
+/**
+ * @param {Array.<number>} point Point geometry.
+ * @param {string=} opt_srsName Optional srsName
+ * @return {string} The coords string.
+ * @private
+ */
+ol.format.GML3.prototype.getCoords3d_ = function(point, opt_srsName) {
+  var axisOrientation = 'enu';
+  if (opt_srsName) {
+    axisOrientation = ol.proj.get(opt_srsName).getAxisOrientation();
+  }
+  return ((axisOrientation.substr(0, 3) === 'enu') ?
+    point[0] + ' ' + point[1] + ' ' + point[2] :
+    point[1] + ' ' + point[0] + ' ' + point[2] );
+};
+
 
 /**
  * @param {Node} node Node.
@@ -615,7 +636,10 @@ ol.format.GML3.prototype.writePosList_ = function(node, value, objectStack) {
   var point;
   for (var i = 0; i < len; ++i) {
     point = points[i];
-    parts[i] = this.getCoords_(point, srsName);
+    if (point.length>2)
+      parts[i] = this.getCoords3d_(point, srsName);
+    else
+      parts[i] = this.getCoords_(point, srsName);
   }
   ol.format.XSD.writeStringTextNode(node, parts.join(' '));
 };
