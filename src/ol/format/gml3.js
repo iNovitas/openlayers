@@ -657,6 +657,9 @@ ol.format.GML3.prototype.writePoint_ = function(node, geometry, objectStack) {
   if (srsName) {
     node.setAttribute('srsName', srsName);
   }
+  if (geometry.getFirstCoordinate().length == 3) {
+    node.setAttribute('srsDimension',3);
+  }
   var pos = ol.xml.createElementNS(node.namespaceURI, 'pos');
   node.appendChild(pos);
   this.writePos_(pos, geometry, objectStack);
@@ -745,6 +748,9 @@ ol.format.GML3.prototype.writeSurfaceOrPolygon_ = function(node, geometry, objec
   if (node.nodeName !== 'PolygonPatch' && srsName) {
     node.setAttribute('srsName', srsName);
   }
+  if (geometry.getFirstCoordinate().length == 3) {
+    node.setAttribute('srsDimension',3);
+  }
   if (node.nodeName === 'Polygon' || node.nodeName === 'PolygonPatch') {
     var rings = geometry.getLinearRings();
     ol.xml.pushSerializeAndPop(
@@ -772,6 +778,9 @@ ol.format.GML3.prototype.writeCurveOrLineString_ = function(node, geometry, obje
   var srsName = context['srsName'];
   if (node.nodeName !== 'LineStringSegment' && srsName) {
     node.setAttribute('srsName', srsName);
+  }
+  if (geometry.getFirstCoordinate().length == 3) {
+    node.setAttribute('srsDimension',3);
   }
   if (node.nodeName === 'LineString' ||
       node.nodeName === 'LineStringSegment') {
